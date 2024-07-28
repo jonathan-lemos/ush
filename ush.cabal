@@ -1,0 +1,72 @@
+cabal-version: 2.2
+
+-- This file has been generated from package.yaml by hpack version 0.36.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           ush
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/jonathan-lemos/ush#readme>
+homepage:       https://github.com/jonathan-lemos/ush#readme
+bug-reports:    https://github.com/jonathan-lemos/ush/issues
+author:         Jonathan Lemos
+maintainer:     jonathanlemos@protonmail.com
+copyright:      2024 Jonathan Lemos
+license:        BSD-3-Clause
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/jonathan-lemos/ush
+
+library
+  exposed-modules:
+      Lib
+      Ush.Parser.Language
+      Ush.Parser.Parser
+      Ush.Parser.ParseResult
+      Ush.Parser.String
+      Ush.Parser.Util
+  other-modules:
+      Paths_ush
+  autogen-modules:
+      Paths_ush
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wno-partial-fields -Wno-missing-export-lists -Wredundant-constraints -XDeriveFunctor -XLambdaCase -XNamedFieldPuns -XTupleSections
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010
+
+executable ush-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_ush
+  autogen-modules:
+      Paths_ush
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wno-partial-fields -Wno-missing-export-lists -Wredundant-constraints -XDeriveFunctor -XLambdaCase -XNamedFieldPuns -XTupleSections -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , ush
+  default-language: Haskell2010
+
+test-suite ush-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_ush
+  autogen-modules:
+      Paths_ush
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wno-partial-fields -Wno-missing-export-lists -Wredundant-constraints -XDeriveFunctor -XLambdaCase -XNamedFieldPuns -XTupleSections -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , ush
+  default-language: Haskell2010
