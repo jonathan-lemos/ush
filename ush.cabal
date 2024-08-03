@@ -26,10 +26,11 @@ source-repository head
 library
   exposed-modules:
       Lib
-      Ush.Parser.Language
+      Ush.Parser.Language.AST
+      Ush.Parser.Language.Language
+      Ush.Parser.Language.LanguageUtil
       Ush.Parser.Parser
       Ush.Parser.ParseResult
-      Ush.Parser.String
       Ush.Parser.Util
   other-modules:
       Paths_ush
@@ -37,7 +38,7 @@ library
       Paths_ush
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wno-partial-fields -Wno-missing-export-lists -Wredundant-constraints -XDeriveFunctor -XLambdaCase -XNamedFieldPuns -XTupleSections
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wno-partial-fields -Wno-missing-export-lists -Wno-unused-do-bind -Wredundant-constraints -XDeriveFunctor -XLambdaCase -XNamedFieldPuns -XTupleSections
   build-depends:
       base >=4.7 && <5
   default-language: Haskell2010
@@ -50,7 +51,7 @@ executable ush-exe
       Paths_ush
   hs-source-dirs:
       app
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wno-partial-fields -Wno-missing-export-lists -Wredundant-constraints -XDeriveFunctor -XLambdaCase -XNamedFieldPuns -XTupleSections -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wno-partial-fields -Wno-missing-export-lists -Wno-unused-do-bind -Wredundant-constraints -XDeriveFunctor -XLambdaCase -XNamedFieldPuns -XTupleSections -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , ush
@@ -65,7 +66,7 @@ test-suite ush-test
       Paths_ush
   hs-source-dirs:
       test
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wno-partial-fields -Wno-missing-export-lists -Wredundant-constraints -XDeriveFunctor -XLambdaCase -XNamedFieldPuns -XTupleSections -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wno-partial-fields -Wno-missing-export-lists -Wno-unused-do-bind -Wredundant-constraints -XDeriveFunctor -XLambdaCase -XNamedFieldPuns -XTupleSections -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , ush
