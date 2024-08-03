@@ -48,19 +48,6 @@ plus parser = do
   v <- parser
   (v :|) <$> star parser
 
-switchCase :: NonEmpty (Parser (), Parser a) -> Parser a
-switchCase ((predicate, parser) :| []) = Parser $ \s ->
-  case parse predicate s of
-    SuccessfulParse {} -> parse parser s
-    FailedParse {reason, failedInput} -> FailedParse {reason, failedInput}
-switchCase ((predicate, parser) :| (nextCase : cases)) = Parser $ \s ->
-  parse
-    ( if isSuccess $ parse predicate s
-        then parser
-        else switchCase $ nextCase :| cases
-    )
-    s
-
 firstOf :: NonEmpty (Parser a) -> Parser a
 firstOf (parser :| (nextParser : parsers)) = Parser $ \s ->
   case parse parser s of

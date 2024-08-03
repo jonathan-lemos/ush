@@ -31,7 +31,9 @@ library
       Ush.Parser.Language.LanguageUtil
       Ush.Parser.Parser
       Ush.Parser.ParseResult
+      Ush.Parser.SwitchCase
       Ush.Parser.Util
+      Ush.Util.Collector
   other-modules:
       Paths_ush
   autogen-modules:
@@ -61,6 +63,7 @@ test-suite ush-test
   type: exitcode-stdio-1.0
   main-is: Main.hs
   other-modules:
+      Helpers.ParserCase
       Spec
       Ush.Parser.UtilSpec
       Paths_ush

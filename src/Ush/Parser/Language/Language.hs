@@ -3,7 +3,6 @@
 module Ush.Parser.Language.Language where
 
 import Control.Applicative ((<|>))
-import Control.Monad (void)
 import Data.Char
 import Data.Maybe
 import Text.Read (readMaybe)
@@ -11,6 +10,7 @@ import Ush.Parser.Language.AST
 import Ush.Parser.Language.LanguageUtil
 import Ush.Parser.ParseResult (errorMessageToken)
 import Ush.Parser.Parser
+import Ush.Parser.SwitchCase
 import Ush.Parser.Util
 
 variableInterpolation :: Parser StringSegment
@@ -23,20 +23,22 @@ variableInterpolation = do
             (literal ")")
 
   literal "$"
-  switchCase
-    [ (void $ literal "(", variableInterpolationExpression),
-      (pure (), Interpolation <$> literalValue)
-    ]
+  switch
+    ( do
+        literal "(" ->: variableInterpolationExpression
+        defaultCase ->: Interpolation <$> literalValue
+    )
     `withFailedParseReason` \s ->
       "Expected [a-zA-Z\\-_] or '(', but got " <> errorMessageToken s
 
 stringSegment :: Parser StringSegment
 stringSegment =
-  switchCase
-    [ (void $ literal "\\", LiteralChar <$> escapeChar),
-      (void $ literal "$", variableInterpolation),
-      (pure (), LiteralChar <$> conditional (not . (`elem` "\"\n")) char)
-    ]
+  switch
+    ( do
+        literal "\\" ->: LiteralChar <$> escapeChar
+        literal "$" ->: variableInterpolation
+        defaultCase ->: LiteralChar <$> conditional (not . (`elem` "\"\n")) char
+    )
 
 mapKeyValuePair :: Parser (String, Factor)
 mapKeyValuePair = do
@@ -47,11 +49,12 @@ mapKeyValuePair = do
 
 functionParameter :: Parser FunctionParameter
 functionParameter =
-  switchCase
-    [ (void $ literal "**", KeywordVariadic <$> (literal "**" >> rawIdentifierString)),
-      (void $ literal "*", PositionalVariadic <$> (literal "*" >> rawIdentifierString)),
-      (pure (), NamedParameter <$> rawIdentifierString)
-    ]
+  switch
+    ( do
+        literal "**" ->: KeywordVariadic <$> (literal "**" >> rawIdentifierString)
+        literal "*" ->: PositionalVariadic <$> (literal "*" >> rawIdentifierString)
+        defaultCase ->: NamedParameter <$> rawIdentifierString
+    )
     `withFailedParseReason` \s ->
       "Expected *?*?[a-zA-Z\\-_]+, got " <> errorMessageToken s
 
@@ -61,12 +64,13 @@ functionArgument =
         key <- rawIdentifierString
         literal "="
         NamedArgument key <$> factor
-   in switchCase
-        [ (void $ literal "**", KeywordSpread <$> (literal "**" >> factor)),
-          (void $ literal "*", PositionalSpread <$> (literal "*" >> factor)),
-          (void $ rawIdentifierString >> literal "=", namedArgument),
-          (pure (), FactorArgument <$> factor)
-        ]
+   in switch
+        ( do
+            literal "**" ->: KeywordSpread <$> (literal "**" >> factor)
+            literal "*" ->: PositionalSpread <$> (literal "*" >> factor)
+            rawIdentifierString >> literal "=" ->: namedArgument
+            defaultCase ->: FactorArgument <$> factor
+        )
         `withFailedParseReason` \s ->
           "Expected **value, *value, keyword argument, or positional argument; got " <> errorMessageToken s
 
@@ -135,15 +139,16 @@ numberValue = do
 
 factor :: Parser Factor
 factor =
-  switchCase
-    [ (void $ conditional isHeadIdentifierChar char, literalValue),
-      (void $ literal "\"", stringValue),
-      (void $ literal "[", listValue),
-      (void $ literal "{", mapValue),
-      (void $ literal "lambda", lambdaValue),
-      (void $ conditional (liftA2 (||) (== '-') isDigit) char, numberValue),
-      (void $ literal "(", functionCallFactor)
-    ]
+  switch
+    ( do
+        conditional isHeadIdentifierChar char ->: literalValue
+        literal "\"" ->: stringValue
+        literal "[" ->: listValue
+        literal "{" ->: mapValue
+        literal "lambda" ->: lambdaValue
+        conditional (liftA2 (||) (== '-') isDigit) char ->: numberValue
+        literal "(" ->: functionCallFactor
+    )
     `withFailedParseReason` \s ->
       "Expected a string, list, map, lambda expression, number, or function call, got " <> errorMessageToken s
 
@@ -164,9 +169,10 @@ defineStatement = do
 topLevelStatement :: Parser TopLevelStatement
 topLevelStatement =
   let body =
-        switchCase
-          [ (void $ literal "define", defineStatement),
-            (pure (), functionCallStatement)
-          ]
+        switch
+          ( do
+              literal "define" ->: defineStatement
+              defaultCase ->: functionCallStatement
+          )
    in surrounded whitespace body whitespace `withFailedParseReason` \s ->
         "Expected **value, *value, keyword argument, a positional argument, or define; got " <> errorMessageToken s
