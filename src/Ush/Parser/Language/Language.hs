@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedLists #-}
 
-module Ush.Parser.Language where
+module Ush.Parser.Language.Language where
 
 import Control.Applicative ((<|>))
 import Control.Monad (void)
