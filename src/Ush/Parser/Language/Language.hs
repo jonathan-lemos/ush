@@ -18,9 +18,9 @@ variableInterpolation = do
   let variableInterpolationExpression =
         Interpolation
           <$> surrounded
-            (literal "(")
+            (literal "(" >> whitespace)
             factor
-            (literal ")")
+            (whitespace >> literal ")")
 
   literal "$"
   switch
@@ -53,7 +53,7 @@ functionParameter =
     ( do
         literal "**" ->: KeywordVariadic <$> (literal "**" >> rawIdentifierString)
         literal "*" ->: PositionalVariadic <$> (literal "*" >> rawIdentifierString)
-        defaultCase ->: NamedParameter <$> rawIdentifierString
+        defaultCase ->: liftA2 NamedParameter rawIdentifierString (optional $ literal "=" >> factor)
     )
     `withFailedParseReason` \s ->
       "Expected *?*?[a-zA-Z\\-_]+, got " <> errorMessageToken s
@@ -109,6 +109,8 @@ mapValue =
 
 lambdaValue :: Parser Factor
 lambdaValue = parenthesized $ do
+  literal "("
+  whitespace
   literal "lambda"
   whitespace
   literal "("
@@ -119,6 +121,8 @@ lambdaValue = parenthesized $ do
   literal "("
   whitespace
   body <- plus (parenthesized topLevelStatement)
+  whitespace
+  literal ")"
   whitespace
   literal ")"
   return $ LambdaValue params body
@@ -145,7 +149,7 @@ factor =
         literal "\"" ->: stringValue
         literal "[" ->: listValue
         literal "{" ->: mapValue
-        literal "lambda" ->: lambdaValue
+        literal "(" >> whitespace >> literal "lambda" ->: lambdaValue
         conditional (liftA2 (||) (== '-') isDigit) char ->: numberValue
         literal "(" ->: functionCallFactor
     )

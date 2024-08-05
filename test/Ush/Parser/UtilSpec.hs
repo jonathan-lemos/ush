@@ -36,7 +36,7 @@ digitExp :: Parser Integer
 digitExp = parseFoldr (^) 1 digit
 
 spec :: Spec
-spec = do
+spec = parallel $ do
   describe "char" $ do
     parserCase "parses a character" char $ do
       "abc" `shouldParseTo` 'a' `andRemainder` "bc"

@@ -11,7 +11,7 @@ data Number = IntNumber Integer | FloatNumber Double
   deriving (Show, Eq)
 
 data FunctionParameter
-  = NamedParameter String
+  = NamedParameter String (Maybe Factor)
   | PositionalVariadic String
   | KeywordVariadic String
   deriving (Show, Eq)

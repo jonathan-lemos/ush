@@ -42,8 +42,7 @@ library
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wno-partial-fields -Wno-missing-export-lists -Wno-unused-do-bind -Wredundant-constraints -XDeriveFunctor -XLambdaCase -XNamedFieldPuns -XTupleSections
   build-depends:
-      QuickCheck
-    , base >=4.7 && <5
+      base >=4.7 && <5
   default-language: Haskell2010
 
 executable ush-exe
@@ -64,9 +63,11 @@ test-suite ush-test
   type: exitcode-stdio-1.0
   main-is: Main.hs
   other-modules:
+      Helpers.ArbitraryInstances
       Helpers.Laws
       Helpers.ParserCase
       Spec
+      Ush.Parser.ParserSpec
       Ush.Parser.UtilSpec
       Ush.Util.CollectorSpec
       Paths_ush
