@@ -40,6 +40,8 @@ ghc-options:
 
 library:
   source-dirs: src
+  dependencies:
+    - QuickCheck
 
 executables:
   ush-exe:

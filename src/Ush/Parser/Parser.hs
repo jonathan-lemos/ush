@@ -1,5 +1,6 @@
 module Ush.Parser.Parser where
 
+import Test.QuickCheck (Arbitrary (arbitrary))
 import Ush.Parser.ParseResult
 
 type ParseFunction a = String -> ParseResult a
@@ -40,3 +41,6 @@ instance Monad Parser where
 
 instance MonadFail Parser where
   fail reason = Parser $ \s -> FailedParse {reason, failedInput = s}
+
+instance (Arbitrary a) => Arbitrary (Parser a) where
+  arbitrary = Parser <$> arbitrary

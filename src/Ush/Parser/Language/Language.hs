@@ -2,7 +2,7 @@
 
 module Ush.Parser.Language.Language where
 
-import Control.Applicative ((<|>))
+import Control.Applicative (Applicative (..), (<|>))
 import Data.Char
 import Data.Maybe
 import Text.Read (readMaybe)

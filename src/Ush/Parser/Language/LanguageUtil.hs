@@ -1,5 +1,6 @@
 module Ush.Parser.Language.LanguageUtil where
 
+import Control.Applicative (liftA2)
 import Data.Bits (shiftL)
 import Data.Char
 import Data.List (elemIndex)
