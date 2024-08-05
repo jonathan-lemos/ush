@@ -53,7 +53,9 @@ executable ush-exe
       Paths_ush
   hs-source-dirs:
       app
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wno-partial-fields -Wno-missing-export-lists -Wno-unused-do-bind -Wredundant-constraints -XDeriveFunctor -XLambdaCase -XNamedFieldPuns -XTupleSections -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wno-partial-fields -Wno-missing-export-lists -Wno-unused-do-bind -Wredundant-constraints -XDeriveFunctor -XLambdaCase -XNamedFieldPuns -XTupleSections -threaded -static -rtsopts -with-rtsopts=-N
+  cc-options: -static
+  ld-options: -static -pthread
   build-depends:
       base >=4.7 && <5
     , ush

@@ -47,8 +47,11 @@ executables:
     source-dirs:         app
     ghc-options:
     - -threaded
+    - -static
     - -rtsopts
     - -with-rtsopts=-N
+    cc-options: -static
+    ld-options: -static -pthread
     dependencies:
     - ush
 
